@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
+from todo_app.forms import TaskForm
 from todo_app.models import Tag, Task
 
 
@@ -60,7 +62,7 @@ class TagDeleteView(generic.DeleteView):
 
 class TaskCreateView(generic.CreateView):
     model = Task
-    fields = "__all__"
+    form_class = TaskForm
     success_url = reverse_lazy("todo_app:index")
 
     def get_context_data(self, **kwargs):
@@ -73,7 +75,7 @@ class TaskCreateView(generic.CreateView):
 
 class TaskUpdateView(generic.UpdateView):
     model = Task
-    fields = "__all__"
+    form_class = TaskForm
     success_url = reverse_lazy("todo_app:index")
 
     def get_context_data(self, **kwargs):
@@ -94,3 +96,9 @@ class TaskDeleteView(generic.DeleteView):
             "HTTP_REFERER", reverse_lazy("todo_app:index")
         )
         return context
+
+def toggle_task(request, pk):
+    task = get_object_or_404(Task, pk=pk)
+    task.is_done = not task.is_done
+    task.save()
+    return HttpResponseRedirect(reverse_lazy("todo_app:index"))
