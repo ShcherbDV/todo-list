@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>
+    <h1 style="font-weight: bold">
       TODO list
 
   <a href="{% url 'todo_app:task-create' %}" class="btn btn-primary link-to-page">
@@ -11,12 +11,23 @@
   {% if task_list %}
     <ul>
       {% for task in task_list %}
-        <li>
-          {{ task.content }} ({{ task.is_done }})
-          {{ task.datetime }} {{ task.deadline }}
-          {{ task.tags.name }}
-        <a href="{% url 'todo_app:task-update' pk=task.id %}" class="btn btn-primary link-to-page">Update</a>
-        <a href="{% url 'todo_app:task-delete' pk=task.id %}" class="btn btn-primary link-to-page">Delete</a>
+        <li style="list-style-type: none;">
+        <div>
+          <h4 style="font-weight: bold">{{ task.content }} {% if task.is_done == True %} <span style="color: green">Done</span> {% else %} <span style="color: red">Not done</span> {% endif %}</h4>
+        <a href="{% url 'todo_app:task-update' pk=task.id %}">
+          {% if task.is_done == False %} <a href="{% url 'todo_app:task-toggle' task.id %}" class="btn btn-success link-to-page">Complete</a>
+          {% else %}<a href="{% url 'todo_app:task-toggle' task.id %}" class="btn btn-secondary link-to-page">Undo</a>
+        {% endif %}
+        </a>
+        </div>
+          <p>Created: {{ task.datetime }} {% if task.deadline %} <span style="color: darkred">Deadline: {{ task.deadline }}</span>{% endif %}</p>
+          <h5>
+            <span class="text-muted">Tags: {{ task.tags.all|join:" " }}
+            <a href="{% url 'todo_app:task-update' pk=task.id %}">Update</a>
+            <a href="{% url 'todo_app:task-delete' pk=task.id %}">Delete</a>
+            </span>
+          </h5>
+        <hr>
         </li>
       {% endfor %}
     </ul>
