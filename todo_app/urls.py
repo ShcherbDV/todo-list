@@ -6,10 +6,16 @@ from todo_app.views import (
     TagCreateView,
     TagUpdateView,
     TagDeleteView,
+    TaskCreateView,
+    TaskUpdateView,
+    TaskDeleteView,
 )
 
 urlpatterns = [
     path("", index, name="index"),
+    path("tasks/create/", TaskCreateView.as_view(), name="task-create"),
+    path("tasks/update/", TaskUpdateView.as_view(), name="task-update"),
+    path("tasks/delete/", TaskDeleteView.as_view(), name="task-delete"),
     path("tags/", TagListView.as_view(), name="tag-list"),
     path("tags/create/", TagCreateView.as_view(), name="tag-create"),
     path("tags/<int:pk>/update/", TagUpdateView.as_view(), name="tag-update"),
