@@ -9,7 +9,6 @@ def index(request):
 
     queryset = Task.objects.all().order_by("is_done").order_by("datetime")
 
-
     context = {
         "task_list": queryset,
     }
@@ -55,5 +54,43 @@ class TagDeleteView(generic.DeleteView):
         context = super().get_context_data(**kwargs)
         context["previous_url"] = self.request.META.get(
             "HTTP_REFERER", reverse_lazy("todo_app:tag-list")
+        )
+        return context
+
+
+class TaskCreateView(generic.CreateView):
+    model = Task
+    fields = "__all__"
+    success_url = reverse_lazy("todo_app:index")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["previous_url"] = self.request.META.get(
+            "HTTP_REFERER", reverse_lazy("todo_app:index")
+        )
+        return context
+
+
+class TaskUpdateView(generic.UpdateView):
+    model = Task
+    fields = "__all__"
+    success_url = reverse_lazy("todo_app:index")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["previous_url"] = self.request.META.get(
+            "HTTP_REFERER", reverse_lazy("todo_app:index")
+        )
+        return context
+
+
+class TaskDeleteView(generic.DeleteView):
+    model = Task
+    success_url = reverse_lazy("todo_app:index")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["previous_url"] = self.request.META.get(
+            "HTTP_REFERER", reverse_lazy("todo_app:index")
         )
         return context
