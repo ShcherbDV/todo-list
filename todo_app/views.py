@@ -9,7 +9,7 @@ from todo_app.models import Tag, Task
 
 def index(request):
 
-    queryset = Task.objects.all().order_by("is_done").order_by("datetime")
+    queryset = Task.objects.all().order_by("is_done", "-datetime")
 
     context = {
         "task_list": queryset,
